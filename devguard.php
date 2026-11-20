@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name: DevGuard Website Protection
- * Plugin URI: https://devguard.uk
+ * Plugin Name: DevGuard
+ * Plugin URI: https://github.com/DevGuard-uk/devguard-wp-plugin
  * Description: Protect client websites with remote project locking, invoice milestone autolock enforcement, and domain allowlisting.
  * Version: 1.0.0
  * Author: DevGuard Security
@@ -241,23 +241,22 @@ class DevGuard_WordPress_Plugin
         $title = esc_html($check['title'] ?? 'Service Locked');
         $reason = esc_html($check['reason'] ?? 'locked');
         $code = esc_html($check['code'] ?? 'DEVGUARD_LOCKED');
-
-        echo <<<HTML
-<div class="notice notice-error" style="border-left-color: #ef4444; background: #fff5f5; padding: 12px 16px; margin: 15px 0;">
-    <h3 style="margin: 0 0 6px 0; color: #b91c1c; font-size: 14px; font-weight: 700;">
-        ⚠️ DevGuard Alert: Website is LOCKED to Public Visitors
-    </h3>
-    <p style="margin: 0 0 6px 0; color: #4b5563; font-size: 13px;">
-        <strong>Project:</strong> {$projectId} &nbsp;|&nbsp; 
-        <strong>Code:</strong> <code>{$code}</code> &nbsp;|&nbsp; 
-        <strong>Reason:</strong> {$reason} &nbsp;|&nbsp;
-        <strong>Status:</strong> {$title}
-    </p>
-    <p style="margin: 0; color: #1e3a8a; font-size: 12px;">
-        <em>Administrator Bypass Active: You can navigate and manage WordPress normally. Public visitors currently see an SEO-safe HTTP 503 lock screen.</em>
-    </p>
-</div>
-HTML;
+        ?>
+        <div class="notice notice-error" style="border-left-color: #ef4444; background: #fff5f5; padding: 12px 16px; margin: 15px 0;">
+            <h3 style="margin: 0 0 6px 0; color: #b91c1c; font-size: 14px; font-weight: 700;">
+                ⚠️ DevGuard Alert: Website is LOCKED to Public Visitors
+            </h3>
+            <p style="margin: 0 0 6px 0; color: #4b5563; font-size: 13px;">
+                <strong>Project:</strong> <?php echo $projectId; ?> &nbsp;|&nbsp; 
+                <strong>Code:</strong> <code><?php echo $code; ?></code> &nbsp;|&nbsp; 
+                <strong>Reason:</strong> <?php echo $reason; ?> &nbsp;|&nbsp;
+                <strong>Status:</strong> <?php echo $title; ?>
+            </p>
+            <p style="margin: 0; color: #1e3a8a; font-size: 12px;">
+                <em>Administrator Bypass Active: You can navigate and manage WordPress normally. Public visitors currently see an SEO-safe HTTP 503 lock screen.</em>
+            </p>
+        </div>
+        <?php
     }
 
     /**
@@ -276,15 +275,14 @@ HTML;
 
         $projectId = esc_html($this->getProjectId());
         $reason = esc_html($check['reason'] ?? 'locked');
-
-        echo <<<HTML
-<div id="devguard-admin-bypass-bar" style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 999999; background: #991b1b; color: #ffffff; padding: 10px 18px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; font-weight: 600; box-shadow: 0 -4px 12px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: space-between;">
-    <div>
-        ⚠️ <strong>DevGuard Admin Bypass:</strong> This website is currently <u>LOCKED</u> to the public ({$projectId} &bull; {$reason}). You have administrator bypass access.
-    </div>
-    <a href="/wp-admin/options-general.php?page=devguard-settings" style="color: #ffffff; background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 4px; text-decoration: none; font-size: 12px;">Settings</a>
-</div>
-HTML;
+        ?>
+        <div id="devguard-admin-bypass-bar" style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 999999; background: #991b1b; color: #ffffff; padding: 10px 18px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; font-weight: 600; box-shadow: 0 -4px 12px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: space-between;">
+            <div>
+                ⚠️ <strong>DevGuard Admin Bypass:</strong> This website is currently <u>LOCKED</u> to the public (<?php echo $projectId; ?> &bull; <?php echo $reason; ?>). You have administrator bypass access.
+            </div>
+            <a href="<?php echo esc_url(admin_url('options-general.php?page=devguard-settings')); ?>" style="color: #ffffff; background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 4px; text-decoration: none; font-size: 12px;">Settings</a>
+        </div>
+        <?php
     }
 
     public function getCurrentStatusCheck(): ?array
@@ -355,7 +353,7 @@ HTML;
 
             <div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px 20px; margin-bottom: 20px; max-width: 720px;">
                 <h3 style="margin-top: 0;">Connection Status</h3>
-                <p>Status: <?php echo $statusBadge; ?></p>
+                <p>Status: <?php echo wp_kses_post($statusBadge); ?></p>
             </div>
 
             <form method="post" action="options.php" style="max-width: 720px;">

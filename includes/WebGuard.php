@@ -126,7 +126,7 @@ class WebGuard
         $pathname = $uri;
         if ($pathname === null) {
             $rawUri = $_SERVER['REQUEST_URI'] ?? '/';
-            $pathname = parse_url($rawUri, PHP_URL_PATH) ?: '/';
+            $pathname = function_exists('wp_parse_url') ? (wp_parse_url($rawUri, PHP_URL_PATH) ?: '/') : '/';
         }
 
         if (LockResponse::isPathAllowed($pathname, $this->allowedPaths)) {
@@ -269,56 +269,49 @@ class WebGuard
             $this->apiUrl . '/api/v1/projects/' . rawurlencode($this->projectId) . '/status',
         ];
 
-        $headers = [
-            'Accept: application/json',
-            'User-Agent: DevGuard-PHP-Guard/1.0.0',
+        $reqHeaders = [
+            'Accept' => 'application/json',
+            'User-Agent' => 'DevGuard-WordPress-Plugin/1.0.0',
         ];
         if ($this->apiKey !== null && $this->apiKey !== '') {
-            $headers[] = 'X-DevGuard-Key: ' . $this->apiKey;
+            $reqHeaders['X-DevGuard-Key'] = $this->apiKey;
         }
 
         $lastError = null;
 
         foreach ($endpoints as $url) {
             try {
-                if (function_exists('curl_init')) {
-                    $ch = curl_init();
-                    curl_setopt($ch, CURLOPT_URL, $url);
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, (int)ceil($this->timeout));
-                    curl_setopt($ch, CURLOPT_TIMEOUT, (int)ceil($this->timeout));
-                    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+                if (function_exists('wp_remote_get')) {
+                    $response = wp_remote_get($url, [
+                        'timeout' => (int)ceil($this->timeout),
+                        'headers' => $reqHeaders,
+                        'sslverify' => true,
+                    ]);
 
-                    $response = curl_exec($ch);
-                    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                    $curlErr = curl_error($ch);
-                    curl_close($ch);
-
-                    if ($response === false || $curlErr) {
-                        throw new \RuntimeException('cURL error: ' . $curlErr);
+                    if (is_wp_error($response)) {
+                        throw new \RuntimeException(esc_html($response->get_error_message()));
                     }
 
+                    $httpCode = wp_remote_retrieve_response_code($response);
                     if ($httpCode >= 200 && $httpCode < 300) {
-                        $json = json_decode((string)$response, true);
+                        $body = wp_remote_retrieve_body($response);
+                        $json = json_decode((string)$body, true);
                         if (is_array($json)) {
                             return $json;
                         }
                     }
                 } else {
-                    // Fallback to stream context
                     $ctx = stream_context_create([
                         'http' => [
                             'method' => 'GET',
-                            'header' => implode("\r\n", $headers),
+                            'header' => "Accept: application/json\r\nUser-Agent: DevGuard-WordPress-Plugin/1.0.0\r\n",
                             'timeout' => $this->timeout,
                             'ignore_errors' => true,
                         ],
                     ]);
-                    $response = @file_get_contents($url, false, $ctx);
-                    if ($response !== false) {
-                        $json = json_decode($response, true);
+                    $body = @file_get_contents($url, false, $ctx);
+                    if ($body !== false) {
+                        $json = json_decode((string)$body, true);
                         if (is_array($json)) {
                             return $json;
                         }
@@ -329,7 +322,12 @@ class WebGuard
             }
         }
 
-        throw new \RuntimeException('Failed to fetch DevGuard status: ' . ($lastError ? $lastError->getMessage() : 'HTTP error'));
+        if ($this->failSafe) {
+            return null;
+        }
+
+        $errMsg = $lastError ? esc_html($lastError->getMessage()) : 'HTTP error';
+        throw new \RuntimeException('Failed to fetch DevGuard status: ' . $errMsg);
     }
 
     /**

@@ -128,141 +128,141 @@ class LockResponse
 
         $contactHtml = implode("\n", $contactLinks);
 
-        return <<<HTML
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="robots" content="noindex, nofollow, noarchive" />
-  <meta http-equiv="refresh" content="{$retryAfter}" />
-  <title>{$title}</title>
-  <style>
-    :root {
-      --bg: #090d16;
-      --card-bg: #111726;
-      --border: #1f293d;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --accent: #ef4444;
-      --accent-glow: rgba(239, 68, 68, 0.15);
-      --btn-bg: #1e293b;
-      --btn-hover: #334155;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: radial-gradient(circle at 50% 20%, #151e33 0%, var(--bg) 100%);
-      color: var(--text-main);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1.5rem;
-    }
-    .dg-container {
-      max-width: 540px;
-      width: 100%;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 1rem;
-      padding: 2.5rem 2rem;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 40px var(--accent-glow);
-      text-align: center;
-    }
-    .dg-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: rgba(239, 68, 68, 0.12);
-      color: var(--accent);
-      border: 1px solid rgba(239, 68, 68, 0.25);
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      padding: 0.35rem 0.75rem;
-      border-radius: 9999px;
-      margin-bottom: 1.25rem;
-    }
-    .dg-badge::before {
-      content: "";
-      width: 6px;
-      height: 6px;
-      background: var(--accent);
-      border-radius: 50%;
-      box-shadow: 0 0 8px var(--accent);
-    }
-    h1 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 0.75rem;
-      color: var(--text-main);
-      line-height: 1.3;
-    }
-    .dg-app {
-      font-size: 0.875rem;
-      color: var(--text-muted);
-      margin-bottom: 1.5rem;
-    }
-    .dg-message {
-      font-size: 0.95rem;
-      color: #cbd5e1;
-      line-height: 1.6;
-      margin-bottom: 2rem;
-      background: rgba(255, 255, 255, 0.03);
-      padding: 1rem 1.25rem;
-      border-radius: 0.5rem;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-    }
-    .dg-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-    .dg-btn {
-      display: inline-block;
-      width: 100%;
-      padding: 0.75rem 1.25rem;
-      font-size: 0.875rem;
-      font-weight: 600;
-      text-decoration: none;
-      border-radius: 0.5rem;
-      transition: all 0.2s ease;
-      cursor: pointer;
-    }
-    .dg-btn-secondary {
-      background: var(--btn-bg);
-      color: var(--text-main);
-      border: 1px solid var(--border);
-    }
-    .dg-btn-secondary:hover {
-      background: var(--btn-hover);
-      border-color: #475569;
-    }
-    .dg-footer {
-      margin-top: 2rem;
-      font-size: 0.75rem;
-      color: #64748b;
-    }
-  </style>
-</head>
-<body>
-  <div class="dg-container">
-    <div class="dg-badge">HTTP 503 · Service Locked</div>
-    <h1>{$title}</h1>
-    <div class="dg-app">Protected: {$appName}</div>
-    <div class="dg-message">{$message}</div>
-    <div class="dg-actions">
-      {$contactHtml}
-    </div>
-    <div class="dg-footer">
-      Secured by DevGuard Protection Framework
-    </div>
-  </div>
-</body>
-</html>
-HTML;
+        $html = '<!DOCTYPE html>' . "\n"
+            . '<html lang="en">' . "\n"
+            . '<head>' . "\n"
+            . '  <meta charset="utf-8" />' . "\n"
+            . '  <meta name="viewport" content="width=device-width, initial-scale=1" />' . "\n"
+            . '  <meta name="robots" content="noindex, nofollow, noarchive" />' . "\n"
+            . '  <meta http-equiv="refresh" content="' . $retryAfter . '" />' . "\n"
+            . '  <title>' . $title . '</title>' . "\n"
+            . '  <style>' . "\n"
+            . '    :root {' . "\n"
+            . '      --bg: #090d16;' . "\n"
+            . '      --card-bg: #111726;' . "\n"
+            . '      --border: #1f293d;' . "\n"
+            . '      --text-main: #f8fafc;' . "\n"
+            . '      --text-muted: #94a3b8;' . "\n"
+            . '      --accent: #ef4444;' . "\n"
+            . '      --accent-glow: rgba(239, 68, 68, 0.15);' . "\n"
+            . '      --btn-bg: #1e293b;' . "\n"
+            . '      --btn-hover: #334155;' . "\n"
+            . '    }' . "\n"
+            . '    * { box-sizing: border-box; margin: 0; padding: 0; }' . "\n"
+            . '    body {' . "\n"
+            . '      background: radial-gradient(circle at 50% 20%, #151e33 0%, var(--bg) 100%);' . "\n"
+            . '      color: var(--text-main);' . "\n"
+            . '      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;' . "\n"
+            . '      min-height: 100vh;' . "\n"
+            . '      display: flex;' . "\n"
+            . '      align-items: center;' . "\n"
+            . '      justify-content: center;' . "\n"
+            . '      padding: 1.5rem;' . "\n"
+            . '    }' . "\n"
+            . '    .dg-container {' . "\n"
+            . '      max-width: 540px;' . "\n"
+            . '      width: 100%;' . "\n"
+            . '      background: var(--card-bg);' . "\n"
+            . '      border: 1px solid var(--border);' . "\n"
+            . '      border-radius: 1rem;' . "\n"
+            . '      padding: 2.5rem 2rem;' . "\n"
+            . '      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 40px var(--accent-glow);' . "\n"
+            . '      text-align: center;' . "\n"
+            . '    }' . "\n"
+            . '    .dg-badge {' . "\n"
+            . '      display: inline-flex;' . "\n"
+            . '      align-items: center;' . "\n"
+            . '      gap: 0.5rem;' . "\n"
+            . '      background: rgba(239, 68, 68, 0.12);' . "\n"
+            . '      color: var(--accent);' . "\n"
+            . '      border: 1px solid rgba(239, 68, 68, 0.25);' . "\n"
+            . '      font-size: 0.75rem;' . "\n"
+            . '      font-weight: 600;' . "\n"
+            . '      letter-spacing: 0.05em;' . "\n"
+            . '      text-transform: uppercase;' . "\n"
+            . '      padding: 0.35rem 0.75rem;' . "\n"
+            . '      border-radius: 9999px;' . "\n"
+            . '      margin-bottom: 1.25rem;' . "\n"
+            . '    }' . "\n"
+            . '    .dg-badge::before {' . "\n"
+            . '      content: "";' . "\n"
+            . '      width: 6px;' . "\n"
+            . '      height: 6px;' . "\n"
+            . '      background: var(--accent);' . "\n"
+            . '      border-radius: 50%;' . "\n"
+            . '      box-shadow: 0 0 8px var(--accent);' . "\n"
+            . '    }' . "\n"
+            . '    h1 {' . "\n"
+            . '      font-size: 1.5rem;' . "\n"
+            . '      font-weight: 700;' . "\n"
+            . '      margin-bottom: 0.75rem;' . "\n"
+            . '      color: var(--text-main);' . "\n"
+            . '      line-height: 1.3;' . "\n"
+            . '    }' . "\n"
+            . '    .dg-app {' . "\n"
+            . '      font-size: 0.875rem;' . "\n"
+            . '      color: var(--text-muted);' . "\n"
+            . '      margin-bottom: 1.5rem;' . "\n"
+            . '    }' . "\n"
+            . '    .dg-message {' . "\n"
+            . '      font-size: 0.95rem;' . "\n"
+            . '      color: #cbd5e1;' . "\n"
+            . '      line-height: 1.6;' . "\n"
+            . '      margin-bottom: 2rem;' . "\n"
+            . '      background: rgba(255, 255, 255, 0.03);' . "\n"
+            . '      padding: 1rem 1.25rem;' . "\n"
+            . '      border-radius: 0.5rem;' . "\n"
+            . '      border: 1px solid rgba(255, 255, 255, 0.06);' . "\n"
+            . '    }' . "\n"
+            . '    .dg-actions {' . "\n"
+            . '      display: flex;' . "\n"
+            . '      flex-direction: column;' . "\n"
+            . '      gap: 0.75rem;' . "\n"
+            . '    }' . "\n"
+            . '    .dg-btn {' . "\n"
+            . '      display: inline-block;' . "\n"
+            . '      width: 100%;' . "\n"
+            . '      padding: 0.75rem 1.25rem;' . "\n"
+            . '      font-size: 0.875rem;' . "\n"
+            . '      font-weight: 600;' . "\n"
+            . '      text-decoration: none;' . "\n"
+            . '      border-radius: 0.5rem;' . "\n"
+            . '      transition: all 0.2s ease;' . "\n"
+            . '      cursor: pointer;' . "\n"
+            . '    }' . "\n"
+            . '    .dg-btn-secondary {' . "\n"
+            . '      background: var(--btn-bg);' . "\n"
+            . '      color: var(--text-main);' . "\n"
+            . '      border: 1px solid var(--border);' . "\n"
+            . '    }' . "\n"
+            . '    .dg-btn-secondary:hover {' . "\n"
+            . '      background: var(--btn-hover);' . "\n"
+            . '      border-color: #475569;' . "\n"
+            . '    }' . "\n"
+            . '    .dg-footer {' . "\n"
+            . '      margin-top: 2rem;' . "\n"
+            . '      font-size: 0.75rem;' . "\n"
+            . '      color: #64748b;' . "\n"
+            . '    }' . "\n"
+            . '  </style>' . "\n"
+            . '</head>' . "\n"
+            . '<body>' . "\n"
+            . '  <div class="dg-container">' . "\n"
+            . '    <div class="dg-badge">HTTP 503 · Service Locked</div>' . "\n"
+            . '    <h1>' . $title . '</h1>' . "\n"
+            . '    <div class="dg-app">Protected: ' . $appName . '</div>' . "\n"
+            . '    <div class="dg-message">' . $message . '</div>' . "\n"
+            . '    <div class="dg-actions">' . "\n"
+            . '      ' . $contactHtml . "\n"
+            . '    </div>' . "\n"
+            . '    <div class="dg-footer">' . "\n"
+            . '      Secured by DevGuard Protection Framework' . "\n"
+            . '    </div>' . "\n"
+            . '  </div>' . "\n"
+            . '</body>' . "\n"
+            . '</html>';
+
+        return $html;
     }
 
     /**
@@ -323,6 +323,7 @@ HTML;
             if (!headers_sent()) {
                 header('Content-Type: text/html; charset=utf-8');
             }
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             echo self::generateLockHtml($opts);
         }
 

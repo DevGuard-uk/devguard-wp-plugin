@@ -124,7 +124,9 @@ class Cache
             unset(self::$memoryCache[$key]);
             $filePath = $this->getCacheFilePath($key);
             if (file_exists($filePath)) {
-                @unlink($filePath);
+                if (function_exists('wp_delete_file')) {
+                    wp_delete_file($filePath);
+                }
             }
         } else {
             self::$memoryCache = [];
